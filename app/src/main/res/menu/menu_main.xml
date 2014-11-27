@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_linear_vertical"
+        android:title="Linear Vertical"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_linear_horizontal"
+        android:title="Linear Horizontal"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_vertical_grid"
+        android:title="Grid Vertical"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_horizontal_grid"
+        android:title="Grid Horizontal"
+        app:showAsAction="never" />
+</menu>

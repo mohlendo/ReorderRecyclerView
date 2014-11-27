@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="list_text_size">16sp</dimen>
+    <dimen name="list_item_height">48dip</dimen>
+    <dimen name="card_insets">8dp</dimen>
+</resources>
