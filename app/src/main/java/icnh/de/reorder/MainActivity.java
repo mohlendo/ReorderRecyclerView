@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,16 +42,14 @@ public class MainActivity extends ActionBarActivity {
     private List<String> cheeseList;
 
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager verticalGridLayoutManager;
-    private RecyclerView.LayoutManager verticalLinearLayoutManager;
-    private LinearLayoutManager horizontalLinearLayoutManager;
-    private GridLayoutManager horizontalGridLayoutManager;
+    private int selectedLayoutMangerIndex = 2;
+    private List<RecyclerView.LayoutManager> availableLayoutManager = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         cheeseList = new ArrayList<>();
         Collections.addAll(cheeseList, Cheeses.sCheeseStrings);
 
@@ -60,12 +59,18 @@ public class MainActivity extends ActionBarActivity {
         recyclerView.addItemDecoration(new InsetDecoration(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        verticalLinearLayoutManager = new LinearLayoutManager(this);
-        horizontalLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        verticalGridLayoutManager = new GridLayoutManager(this, 2);
-        horizontalGridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false);
 
-        recyclerView.setLayoutManager(verticalGridLayoutManager);
+        availableLayoutManager.add(new LinearLayoutManager(this));
+        availableLayoutManager.add(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        availableLayoutManager.add(new GridLayoutManager(this, 2));
+        availableLayoutManager.add(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
+
+        if (savedInstanceState != null) {
+            selectedLayoutMangerIndex = savedInstanceState.getInt("selectedLayoutMangerIndex");
+        }
+
+        recyclerView.setLayoutManager(availableLayoutManager.get(selectedLayoutMangerIndex));
+
 
         ReorderRecyclerView.ReorderAdapter adapter = new ReorderRecyclerView.ReorderAdapter() {
             @Override
@@ -98,7 +103,12 @@ public class MainActivity extends ActionBarActivity {
         };
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("selectedLayoutMangerIndex", selectedLayoutMangerIndex);
     }
 
     @Override
@@ -109,24 +119,26 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        selectedLayoutMangerIndex = 0;
         int id = item.getItemId();
         switch (id) {
             case R.id.action_linear_vertical:
-                recyclerView.setLayoutManager(verticalLinearLayoutManager);
-                return true;
+                selectedLayoutMangerIndex = 0;
+                break;
             case R.id.action_linear_horizontal:
-                recyclerView.setLayoutManager(horizontalLinearLayoutManager);
-                return true;
+                selectedLayoutMangerIndex = 1;
+                break;
             case R.id.action_vertical_grid:
-                recyclerView.setLayoutManager(verticalGridLayoutManager);
-                return true;
-
+                selectedLayoutMangerIndex = 2;
+                break;
             case R.id.action_horizontal_grid:
-                recyclerView.setLayoutManager(horizontalGridLayoutManager);
-                return true;
+                selectedLayoutMangerIndex = 3;
+                break;
             default:
                 break;
         }
+
+        recyclerView.setLayoutManager(availableLayoutManager.get(selectedLayoutMangerIndex));
 
         return super.onOptionsItemSelected(item);
     }
